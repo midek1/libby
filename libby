@@ -1,0 +1,139 @@
+#!/bin/bash
+
+while true; do
+	case $1 in
+		--rofi)      mode="rofi"; shift ;;
+		--mirror)    shift; mirrornum="$1"; shift ;;
+		--no-view)   view=0; shift ;;
+		--to-kindle) tokindle=1; shift ;;
+		*) 		     query="$*"; break ;;
+	esac
+done
+
+if [ -z "$query" ]; then
+	echo "Usage: libgen [--rofi] [--mirror <num>] [--no-view] [--to-kindle] <query>"
+	echo "  --rofi: use rofi to select a book (default is fzf)"
+	echo "  --mirror <num>: use an alternative libgen mirror (default: 3)"
+	echo "  --no-view: don't view the result"
+	echo "  --to-kindle: convert file to .mobi and send to \$KINDLE_EMAIL via mutt/neomutt"
+	echo -e "  <query>: the query to search for\n"
+	exit 1
+fi
+
+output_dir="$HOME/books"
+[ -z "$mode" ] && mode="fzf"
+[ -z "$mirrornum" ] && mirrornum=3
+[ -z "$view" ] && view=1
+[ -z "$tokindle" ] && tokindle=0
+
+download() {
+	echo "fetching data..."
+	data=$(curl -A "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) QtWebEngine/5.15.5 Chrome/87.0.4280.144 Safari/537.36" -Ls "https://libgen.gs/index.php?req=$(echo "$query" | jq -sRr @uri)&columns%5B%5D=t&columns%5B%5D=a&columns%5B%5D=s&columns%5B%5D=y&columns%5B%5D=i&objects%5B%5D=f&topics%5B%5D=l&topics%5B%5D=f&res=25")
+	echo "done"
+
+	# get array of book info with pup using the table rows (tr elements), it's the 2nd to last table
+	bookdata=$(echo $data | pup 'table:nth-last-of-type(1)')
+
+	trr=1 # first row is the header
+	skipped=0 # number of skipped books due to extension exclusion
+
+	# continue until no more tr elements
+	while true; do
+		if [ $trr -eq 1 ]; then
+			bookTitle=$(echo "$bookdata" | pup "tr:nth-of-type($trr) td:nth-of-type(1) text{}" | grep -v "^\s*$" | trim | tail -n +8 | head -2 | xargs)
+		else
+			bookTitle=$(echo "$bookdata" | pup "tr:nth-of-type($trr) td:nth-of-type(1) text{}" | grep -v "^\s*$" | trim | head -2 | xargs)
+		fi
+
+		if [ -z "$bookTitle" ]; then
+			break # exit if no title
+		fi
+
+		bookAuthor=$(echo $bookdata | pup "tr:nth-of-type($trr) td:nth-of-type(2) text{}")
+		bookAuthor=$(echo "$bookAuthor" | sed -n 2p | xargs)
+
+		bookPublisher=$(echo $bookdata | pup "tr:nth-of-type($trr) td:nth-of-type(3) text{}" | xargs)
+
+		bookYear=$(echo $bookdata | pup "tr:nth-of-type($trr) td:nth-of-type(4) text{}" | xargs)
+
+		bookLanguage=$(echo $bookdata | pup "tr:nth-of-type($trr) td:nth-of-type(5) text{}" | xargs)
+
+		bookSize=$(echo $bookdata | pup "tr:nth-of-type($trr) td:nth-of-type(7) text{}" | xargs)
+
+		bookFiletype=$(echo $bookdata | pup "tr:nth-of-type($trr) td:nth-of-type(8) text{}" | xargs)
+
+		if echo $bookFiletype | grep -q "\(rar\|mobi\|htm\|txt\|zip\|rtf\|lit\|doc\|docx\|fb2\|cbz\|html\)"; then
+			skipped=$((skipped+1))
+			trr=$((trr+1))
+			continue
+		fi
+
+		bookMirror=$(echo $bookdata | pup "tr:nth-of-type($trr) td:nth-of-type(9) a:nth-of-type($mirrornum) attr{href}" | xargs)
+		
+		echo ";0;$((trr-skipped));1;$bookTitle;2;$bookAuthor;3;$bookPublisher;4;$bookYear;5;$bookSize;6;$bookFiletype;7;$bookMirror;8;"
+		trr=$((trr+1))
+	done > /tmp/libgen.txt
+
+	# if file is empty, exit
+	if [ ! -s /tmp/libgen.txt ]; then
+		echo "No results found for '$query'"
+		return 1
+	fi
+
+	# exclude mirror
+	if [ "$mode" = "rofi" ]; then
+		line=$(cat /tmp/libgen.txt | sed 's/;0;//g' | sed 's/;1;/: /' | sed 's/;2;/ - /' | sed 's/;3;/ (/' | sed 's/;4;/, /' | sed 's/;5;/, /' | sed 's/;6;/) [/' | sed 's/;7;.*/]/' | sed 's/[0-9][0-9][0-9][0-9][0-9][0-9]\+ \?,\?\;\?//g' | trim | recode -q html..ascii | rofi -i -dmenu -p "Select book: " -theme-str '* { font: "Hack 12"; width: 80%; }' -l 26 | cut -d':' -f1 | sed 's/;1;.*//g' | sed 's/;0;//g')
+	else
+		line=$(cat /tmp/libgen.txt | sed 's/;0;//g' | sed 's/;1;/: /' | sed 's/;2;/ - /' | sed 's/;3;/ (/' | sed 's/;4;/, /' | sed 's/;5;/, /' | sed 's/;6;/) [/' | sed 's/;7;.*/]/' | sed 's/[0-9][0-9][0-9][0-9][0-9][0-9]\+ \?,\?\;\?//g' | trim | recode -q html..ascii | fzf | cut -d':' -f1 | sed 's/;1;.*//g' | sed 's/;0;//g')
+	fi
+
+	[ -z "$line" ] && return 1
+
+	title=$(cat /tmp/libgen.txt | sed -n "$line"p | sed 's/.*;1;//' | sed 's/;2;.*//g' | sed 's/[0-9][0-9][0-9][0-9][0-9][0-9]\+ \?,\?\;\?//g' | trim | sed 's/ 1$//g;s/ X$//g' | recode -q html..ascii)
+	author=$(cat /tmp/libgen.txt | sed -n "$line"p | sed 's/.*;2;//' | sed 's/;3;.*//g')
+	publisher=$(cat /tmp/libgen.txt | sed -n "$line"p | sed 's/.*;3;//' | sed 's/;4;.*//g')
+	year=$(cat /tmp/libgen.txt | sed -n "$line"p | sed 's/.*;4;//' | sed 's/;5;.*//g')
+	size=$(cat /tmp/libgen.txt | sed -n "$line"p | sed 's/.*;5;//' | sed 's/;6;.*//g')
+	filetype=$(cat /tmp/libgen.txt | sed -n "$line"p | sed 's/.*;6;//' | sed 's/;7;.*//g')
+	mirror=$(cat /tmp/libgen.txt | sed -n "$line"p | sed 's/.*;7;//' | sed 's/;8;.*//g')
+	[ -z "$mirror" ] && echo "no mirror found" && return 1
+	echo "fetching mirror..."
+	mirror=$(curl -A "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) QtWebEngine/5.15.5 Chrome/87.0.4280.144 Safari/537.36" -Ls $mirror | pup "#download a attr{href}" | head -1)
+	echo "done"
+	[ -z "$mirror" ] && echo "failed to retrieve mirror" && return 1
+
+	# download from mirror and save to ~/books
+	title=$(echo "$title" | tr '[:upper:]' '[:lower:]' | sed 's/ /-/g' | tr -cd '[:alnum:]._-')
+	echo "downloading $title.$filetype..."
+	wget -c -O "$output_dir/$title.$filetype" "$mirror"
+	echo "done"
+	echo $mirror
+
+	if [ $view = 1 ]; then
+		xdg-open "$output_dir/$title.$filetype"
+	fi
+
+	if [ $tokindle = 1 ]; then
+		ebook-convert "$output_dir/$title.$filetype" "/tmp/$title.mobi"
+		echo "" | neomutt -s "wow" -a "/tmp/$title.mobi" -- $KINDLE_EMAIL
+	fi
+}
+
+if [ -n "$file" ]; then
+	# loop through $file
+	while read line; do
+		query="$line"
+		echo "Searching for $query"
+		download "$query"
+	done < "$file"
+else
+	if [ $stdin = 1 ]; then
+		for line in $(cat); do
+			query="$line"
+			echo "Searching for $query"
+			download "$query"
+		done
+	else
+		download "$query"
+	fi
+fi
