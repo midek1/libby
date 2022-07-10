@@ -55,7 +55,7 @@ download() {
 		bookSize=$(echo $bookdata | pup "tr:nth-of-type($trr) td:nth-of-type(7) text{}" | xargs)
 		bookFiletype=$(echo $bookdata | pup "tr:nth-of-type($trr) td:nth-of-type(8) text{}" | xargs)
 
-		if echo $bookFiletype | grep -q "\(rar\|mobi\|htm\|txt\|zip\|rtf\|lit\|doc\|docx\|fb2\|cbz\|html\|azw3\)"; then
+		if ! echo $bookFiletype | grep -q "\(epub\|pdf\)"; then
 			skipped=$((skipped+1))
 			trr=$((trr+1))
 			continue
