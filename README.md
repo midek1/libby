@@ -41,4 +41,4 @@ Usage: libgen [--rofi] [--mirror <num>] [--no-view] [--to-kindle] <query>
 
 # Why I made this
 
-Because everything else was too slow, tried to do too much, or no longer worked.
+Because everything else was too slow, tried to do too much, or no longer worked. The whole point of having a cli is it's faster and more convenient that navigating to the download manually in your browser.
