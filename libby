@@ -96,7 +96,7 @@ download() {
 	[ -z "$mirror" ] && echo "failed to retrieve mirror" && return 1
 
 	# download from mirror and save to ~/books
-	title=$(echo "$title" | tr '[:upper:]' '[:lower:]' | sed 's/ /-/g' | tr -cd '[:alnum:]._-' | sed 's/-\+/-/g' | sed 's/-x\././g')
+	title=$(echo "$title" | tr '[:upper:]' '[:lower:]' | sed 's/ /-/g' | tr -cd '[:alnum:]._-' | sed 's/-\+/-/g' | sed 's/-x$//')
 	echo "downloading $title.$filetype..."
 	wget -c -O "$output_dir/$title.$filetype" "$mirror"
 	echo $mirror
