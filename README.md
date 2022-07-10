@@ -2,13 +2,23 @@
 
 `libby` is a simple cli tool to quickly download books from Library Genesis.
 
+## Requirements
+
+- pup
+- curl
+- wget
+- fzf
+- mut/neomutt (optional)
+- rofi (optional)
+- ebook-convert (optional)
+
 ## Installation
 
 Run the following:
 
 ```bash
 git clone https://github.com/carterprince/libby
-sudo mv libby/libby /usr/local/bin/
+sudo cp libby/libby /usr/local/bin/
 ```
 
 ## Usage
@@ -23,3 +33,12 @@ Usage: libgen [--rofi] [--mirror <num>] [--no-view] [--to-kindle] <query>
   --to-kindle: convert file to .mobi and send to $KINDLE_EMAIL via mutt/neomutt
   <query>: the query to search for
 ```
+
+# Things to consider
+
+- By default, `libby` filters out all filtypes except ePUBs and PDFs.
+- `libby` assumes `$HOME/books` (lowercase 'b') exists and saves all downloads there.
+
+# Why I made this
+
+Because everything else was too slow, tried to do too much, or no longer worked. The whole point of having a cli is it's faster and more convenient that navigating to the download manually in your browser.
