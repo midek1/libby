@@ -36,5 +36,5 @@ Usage: libgen [--rofi] [--mirror <num>] [--no-view] [--to-kindle] <query>
 
 # Things to consider
 
-- By default, libby filters out all filtypes except ePUBs and PDFs.
-- libby assumes $HOME/books (lowercase) exists and saves all downloads there.
+- By default, `libby` filters out all filtypes except ePUBs and PDFs.
+- `libby` assumes `$HOME/books` (lowercase 'b') exists and saves all downloads there.
