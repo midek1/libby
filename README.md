@@ -15,7 +15,7 @@ sudo mv libby/libby /usr/local/bin/
 
 Run `libby` with no arguments for help:
 
-```md
+```
 Usage: libgen [--rofi] [--mirror <num>] [--no-view] [--to-kindle] <query>
   --rofi: use rofi to select a book (default is fzf)
   --mirror <num>: use an alternative libgen mirror (default: 3)
