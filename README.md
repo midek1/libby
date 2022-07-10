@@ -16,10 +16,10 @@ sudo mv libby/libby /usr/local/bin/
 Run `libby` with no arguments for help:
 
 ```md
-Usage: libgen [-i] [-rofi] [--site <site>] <query>
-  -i: read query from stdin
+Usage: libgen [--rofi] [--mirror <num>] [--no-view] [--to-kindle] <query>
   --rofi: use rofi to select a book (default is fzf)
   --mirror <num>: use an alternative libgen mirror (default: 3)
   --no-view: don't view the result
+  --to-kindle: convert file to .mobi and send to $KINDLE_EMAIL via mutt/neomutt
   <query>: the query to search for
 ```
