@@ -4,10 +4,10 @@
 
 ## Requirements
 
-- pup
+- [`pup`](https://github.com/ericchiang/pup) (`yay -S pup`)
+- [`fzf`](https://github.com/junegunn/fzf) (`sudo pacman -S fzf`)
 - curl
 - wget
-- fzf
 - mut/neomutt (optional)
 - rofi (optional)
 - ebook-convert (optional)
