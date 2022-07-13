@@ -37,7 +37,11 @@ Usage: libgen [--rofi] [--mirror <num>] [--no-view] [--to-kindle] <query>
 # Things to consider
 
 - By default, `libby` filters out all filetypes except ePUBs and PDFs.
-- `libby` assumes `$HOME/books` (lowercase 'b') exists and saves all downloads there.
+- By default, `libby` assumes `$HOME/books` (lowercase 'b') exists and saves all downloads there. This can be changed by adding
+```zsh
+export LIBBY_DIR="/foo/bar"
+```
+to your shell profile (`.zprofile` or `.bash_profile`).
 
 # Why I made this
 
