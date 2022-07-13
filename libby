@@ -5,7 +5,8 @@ while true; do
 		--rofi)      mode="rofi"; shift ;;
 		--mirror)    shift; mirrornum="$1"; shift ;;
 		--no-view)   view=0; shift ;;
-		--to-kindle) tokindle=1; shift ;;
+		--to-kindle) tokindle=1; view=0; shift ;;
+		--to-usb)    tousb=1; view=0; shift ;;
 		*) 		     query="$*"; break ;;
 	esac
 done
@@ -15,7 +16,8 @@ if [ -z "$query" ]; then
 	echo "  --rofi: use rofi to select a book (default is fzf)"
 	echo "  --mirror <num>: use an alternative libgen mirror (default: 3)"
 	echo "  --no-view: don't view the result"
-	echo "  --to-kindle: convert file to .mobi and send to \$KINDLE_EMAIL via mutt/neomutt"
+	echo "  --to-kindle: convert file to .mobi and send to \$KINDLE_EMAIL via mutt/neomutt (implies --no-view)"
+	echo "  --to-usb: copy file to root of \$USB via rsync (implies --no-view)"
 	echo -e "  <query>: the query to search for\n"
 	exit 1
 fi
@@ -25,6 +27,7 @@ output_dir="$HOME/books"
 [ -z "$mirrornum" ] && mirrornum=3
 [ -z "$view" ] && view=1
 [ -z "$tokindle" ] && tokindle=0
+[ -z "$tousb" ] && tousb=0
 
 download() {
 	echo "fetching data..."
@@ -75,7 +78,7 @@ download() {
 
 	# exclude mirror
 	if [ "$mode" = "rofi" ]; then
-		line=$(cat /tmp/libgen.txt | sed 's/;0;//g' | sed 's/;1;/: /' | sed 's/;2;/ - /' | sed 's/;3;/ (/' | sed 's/;4;/, /' | sed 's/;5;/, /' | sed 's/;6;/) [/' | sed 's/;7;.*/]/' | sed 's/[0-9][0-9][0-9][0-9][0-9][0-9]\+ \?,\?\;\?//g' | trim | recode -q html..ascii | rofi -i -dmenu -p "Select book: " -theme-str '* { font: "Hack 12"; width: 80%; }' -l 26 | cut -d':' -f1 | sed 's/;1;.*//g' | sed 's/;0;//g')
+		line=$(cat /tmp/libgen.txt | sed 's/;0;//g' | sed 's/;1;/: /' | sed 's/;2;/ - /' | sed 's/;3;/ (/' | sed 's/;4;/, /' | sed 's/;5;/, /' | sed 's/;6;/) [/' | sed 's/;7;.*/]/' | sed 's/[0-9][0-9][0-9][0-9][0-9][0-9]\+ \?,\?\;\?//g' | trim | recode -q html..ascii | rofi -i -hover-select -me-select-entry '' -me-accept-entry MousePrimary -dmenu -p "Select book: " -hover-select -theme-str '* { font: "monospace 12"; width: 80%; }' -l 26 | cut -d':' -f1 | sed 's/;1;.*//g' | sed 's/;0;//g')
 	else
 		line=$(cat /tmp/libgen.txt | sed 's/;0;//g' | sed 's/;1;/: /' | sed 's/;2;/ - /' | sed 's/;3;/ (/' | sed 's/;4;/, /' | sed 's/;5;/, /' | sed 's/;6;/) [/' | sed 's/;7;.*/]/' | sed 's/[0-9][0-9][0-9][0-9][0-9][0-9]\+ \?,\?\;\?//g' | trim | recode -q html..ascii | fzf | cut -d':' -f1 | sed 's/;1;.*//g' | sed 's/;0;//g')
 	fi
@@ -101,13 +104,18 @@ download() {
 	wget -c -O "$output_dir/$title.$filetype" "$mirror"
 	echo $mirror
 
-	if [ $view = 1 ]; then
-		xdg-open "$output_dir/$title.$filetype"
-	fi
-
 	if [ $tokindle = 1 ]; then
 		ebook-convert "$output_dir/$title.$filetype" "/tmp/$title.mobi"
 		echo "" | neomutt -s "wow" -a "/tmp/$title.mobi" -- $KINDLE_EMAIL
+	fi
+
+	if [ $tousb = 1 ]; then
+		rsync -tEravhp --progress "$output_dir/$title.$filetype" "$USB/$title.$filetype"
+		sync
+	fi
+
+	if [ $view = 1 ]; then
+		xdg-open "$output_dir/$title.$filetype"
 	fi
 }
 
