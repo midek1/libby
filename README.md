@@ -30,7 +30,8 @@ Usage: libgen [--rofi] [--mirror <num>] [--no-view] [--to-kindle] <query>
   --rofi: use rofi to select a book (default is fzf)
   --mirror <num>: use an alternative libgen mirror (default: 3)
   --no-view: don't view the result
-  --to-kindle: convert file to .mobi and send to $KINDLE_EMAIL via mutt/neomutt
+  --to-kindle: convert file to .mobi and send to $KINDLE_EMAIL via mutt/neomutt (implies --no-view)
+  --to-usb: copy file to $USB via rsync (implies --no-view)
   <query>: the query to search for
 ```
 
