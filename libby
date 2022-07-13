@@ -22,7 +22,7 @@ if [ -z "$query" ]; then
 	exit 1
 fi
 
-output_dir="$HOME/books"
+[ -z "$LIBBY_DIR"] && LIBBY_DIR="$HOME/books"
 [ -z "$mode" ] && mode="fzf"
 [ -z "$mirrornum" ] && mirrornum=3
 [ -z "$view" ] && view=1
