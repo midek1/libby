@@ -26,7 +26,7 @@ sudo cp libby/libby /usr/local/bin/
 Run `libby` with no arguments for help:
 
 ```
-Usage: libgen [--rofi] [--mirror <num>] [--no-view] [--to-kindle] <query>
+Usage: libby [--rofi] [--mirror <num>] [--no-view] [--to-kindle] <query>
   --rofi: use rofi to select a book (default is fzf)
   --mirror <num>: use an alternative libgen mirror (default: 3)
   --no-view: don't view the result
@@ -40,7 +40,7 @@ Usage: libgen [--rofi] [--mirror <num>] [--no-view] [--to-kindle] <query>
 - By default, `libby` filters out all filetypes except ePUBs and PDFs.
 - By default, `libby` assumes `$HOME/books` (lowercase 'b') exists and saves all downloads there. This can be changed by adding
 ```zsh
-export LIBBY_DIR="/foo/bar"
+export LIBBY_OUTPUT_DIR="/foo/bar"
 ```
 to your shell profile (`.zprofile` or `.bash_profile`).
 

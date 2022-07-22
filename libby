@@ -12,7 +12,7 @@ while true; do
 done
 
 if [ -z "$query" ]; then
-	echo "Usage: libgen [--rofi] [--mirror <num>] [--no-view] [--to-kindle] <query>"
+	echo "Usage: libby [--rofi] [--mirror <num>] [--no-view] [--to-kindle] <query>"
 	echo "  --rofi: use rofi to select a book (default is fzf)"
 	echo "  --mirror <num>: use an alternative libgen mirror (default: 3)"
 	echo "  --no-view: don't view the result"
@@ -22,7 +22,7 @@ if [ -z "$query" ]; then
 	exit 1
 fi
 
-[ -z "$LIBBY_DIR"] && LIBBY_DIR="$HOME/books"
+[ -z "$LIBBY_OUTPUT_DIR"] && LIBBY_OUTPUT_DIR="$HOME/books"
 [ -z "$mode" ] && mode="fzf"
 [ -z "$mirrornum" ] && mirrornum=3
 [ -z "$view" ] && view=1
@@ -101,21 +101,27 @@ download() {
 	# download from mirror and save to ~/books
 	title=$(echo "$title" | tr '[:upper:]' '[:lower:]' | sed 's/ /-/g' | tr -cd '[:alnum:]._-' | sed 's/-\+/-/g' | sed 's/-x$//' | sed 's/-$//g' | sed 's/^-//g')
 	echo "downloading $title.$filetype..."
-	wget -c -O "$output_dir/$title.$filetype" "$mirror"
+	wget -c -O "$LIBBY_OUTPUT_DIR/$title.$filetype" "$mirror"
 	echo $mirror
 
 	if [ $tokindle = 1 ]; then
-		ebook-convert "$output_dir/$title.$filetype" "/tmp/$title.mobi"
+		ebook-convert "$LIBBY_OUTPUT_DIR/$title.$filetype" "/tmp/$title.mobi"
 		echo "" | neomutt -s "wow" -a "/tmp/$title.mobi" -- $KINDLE_EMAIL
 	fi
 
 	if [ $tousb = 1 ]; then
-		rsync -tEravhp --progress "$output_dir/$title.$filetype" "$USB/$title.$filetype"
+		if ! rsync -tEravhp --progress "$LIBBY_OUTPUT_DIR/$title.$filetype" "$USB/$title.$filetype"; then
+			echo "Waiting for USB..."
+			sleep 1
+			while ! rsync -tEravhp --progress "$LIBBY_OUTPUT_DIR/$title.$filetype" "$USB/$title.$filetype"; do
+				sleep 1
+			done
+		fi
 		sync
 	fi
 
 	if [ $view = 1 ]; then
-		xdg-open "$output_dir/$title.$filetype"
+		xdg-open "$LIBBY_OUTPUT_DIR/$title.$filetype"
 	fi
 }
 
