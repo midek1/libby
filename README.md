@@ -41,7 +41,7 @@ Usage: libby [--rofi] [--mirror <num>] [--no-view] [--to-kindle] <query>
   <query>: the query to search for
 ```
 
-# Things to consider
+## Things to consider
 
 - By default, `libby` filters out all filetypes except ePUBs and PDFs.
 - By default, `libby` assumes `$HOME/books` (lowercase 'b') exists and saves all downloads there. This can be changed by adding
@@ -50,6 +50,6 @@ export LIBBY_OUTPUT_DIR="/foo/bar"
 ```
 to your shell profile (`.zprofile` or `.bash_profile`).
 
-# Why I made this
+## Why I made this
 
 Because everything else was too slow, tried to do too much, or no longer worked. The whole point of having a cli is it's faster and more convenient than navigating to the download manually in your browser.
