@@ -2,6 +2,21 @@
 
 `libby` is a simple cli tool to quickly download books from Library Genesis.
 
+## Installation
+
+Libby is available on the [AUR](https://aur.archlinux.org/) as [`libby-git`](https://aur.archlinux.org/packages/libby-git). If you have [`yay`](https://github.com/Jguer/yay), you can install `libby` with:
+
+```sh
+yay -S libby-git
+```
+
+Or, to install it manually from this repo, run the following:
+
+```bash
+git clone https://github.com/carterprince/libby
+sudo cp libby/libby /usr/bin/
+```
+
 ## Requirements
 
 - [`pup`](https://github.com/ericchiang/pup) (`yay -S pup`)
@@ -11,15 +26,6 @@
 - mut/neomutt (optional)
 - rofi (optional)
 - ebook-convert (optional)
-
-## Installation
-
-Run the following:
-
-```bash
-git clone https://github.com/carterprince/libby
-sudo cp libby/libby /usr/local/bin/
-```
 
 ## Usage
 
