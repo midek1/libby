@@ -1,5 +1,16 @@
+.POSIX:
+
+PREFIX = ~/.local
+
+all: install
+
+libby:
+
 install:
-	sudo cp libby /usr/local/bin/libby
+	mkdir -p ${DESTDIR}${PREFIX}/bin
+	cp libby ${DESTDIR}${PREFIX}/bin/libby
 
 uninstall:
-	sudo rm /usr/local/bin/libby
+	rm -f ${DESTDIR}${PREFIX}/bin/libby
+
+.PHONY: all install uninstall
