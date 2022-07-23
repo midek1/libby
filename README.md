@@ -1,6 +1,6 @@
 # libby
 
-`libby` is a simple cli tool to quickly download books from Library Genesis.
+`libby` is a simple CLI tool to quickly download books from Library Genesis.
 
 ## Installation
 
