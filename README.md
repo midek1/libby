@@ -4,7 +4,7 @@
 
 ## Installation
 
-Libby is available on the [AUR](https://aur.archlinux.org/) as [`libby-git`](https://aur.archlinux.org/packages/libby-git). If you have [`yay`](https://github.com/Jguer/yay), you can install `libby` with:
+`libby` is available on the [AUR](https://aur.archlinux.org/) as [`libby-git`](https://aur.archlinux.org/packages/libby-git). If you have [`yay`](https://github.com/Jguer/yay), you can install `libby` with:
 
 ```sh
 yay -S libby-git
