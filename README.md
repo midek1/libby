@@ -2,6 +2,8 @@
 
 `libby` is a simple CLI tool to quickly download books from [Library Genesis](https://libgen.is/).
 
+https://user-images.githubusercontent.com/11081492/180625509-92b5587c-b845-45d8-a169-2c2fc0d57d1a.mp4
+
 ## Installation
 
 `libby` is available on the [AUR](https://aur.archlinux.org/) as [`libby-git`](https://aur.archlinux.org/packages/libby-git). If you have [`yay`](https://github.com/Jguer/yay), you can install `libby` with:
