@@ -12,7 +12,9 @@ while true; do
 	esac
 done
 
-if [ -z "$query" ] || [ $showhelp = 1 ]; then
+[ -z "$query" ] && showhelp=1
+
+if [ $showhelp ]; then
 	echo "Usage: libby [--rofi] [--mirror <num>] [--no-view] [--to-kindle] <query>"
 	echo "  --rofi: use rofi to select a book (default is fzf)"
 	echo "  --mirror <num>: use an alternative libgen mirror (default: 3)"
