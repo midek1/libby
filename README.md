@@ -27,10 +27,10 @@ sudo cp libby/libby /usr/bin/
 
 When `libby` is installed from the AUR, there is no need to install these manually.
 
-- [`pup`](https://github.com/ericchiang/pup) (`yay -S pup`)
-- [`fzf`](https://github.com/junegunn/fzf) (`sudo pacman -S fzf`)
-- `recode` (`sudo pacman -S recode`)
-- [`jq`](https://github.com/stedolan/jq) (`sudo pacman -S jq`)
+- [`pup`](https://github.com/ericchiang/pup)
+- [`fzf`](https://github.com/junegunn/fzf)
+- `recode`
+- [`jq`](https://github.com/stedolan/jq)
 - curl
 - wget
 
