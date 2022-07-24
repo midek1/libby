@@ -103,7 +103,7 @@ download() {
 
 	# download from mirror and save to ~/books
 	title=$(echo "$title" | tr '[:upper:]' '[:lower:]' | sed 's/ /-/g' | tr -cd '[:alnum:]._-' | sed 's/-\+/-/g' | sed 's/-x$//' | sed 's/-$//g' | sed 's/^-//g')
-	echo "downloading $title.$filetype..."
+	echo "downloading $title.$filetype to $LIBBY_OUTPUT_DIR"
 	wget -c -O - "$mirror" > "$LIBBY_OUTPUT_DIR/$title.$filetype"
 	echo $mirror
 
