@@ -23,6 +23,7 @@ if [ -z "$query" ]; then
 fi
 
 [ -z "$LIBBY_OUTPUT_DIR" ] && LIBBY_OUTPUT_DIR="$HOME/books"
+mkdir -p "$LIBBY_OUTPUT_DIR"
 [ -z "$mode" ] && mode="fzf"
 [ -z "$mirrornum" ] && mirrornum=3
 [ -z "$view" ] && view=1
