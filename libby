@@ -42,9 +42,9 @@ download() {
 	# continue until no more tr elements
 	while true; do
 		if [ $trr -eq 1 ]; then
-			bookTitle=$(echo "$bookdata" | pup "tr:nth-of-type($trr) td:nth-of-type(1) text{}" | grep -v "^\s*$" | trim | tail -n +8 | head -2 | xargs)
+			bookTitle=$(echo "$bookdata" | pup "tr:nth-of-type($trr) td:nth-of-type(1) text{}" | grep -v "^\s*$" | awk '{$1=$1};1' | tail -n +8 | head -2 | xargs)
 		else
-			bookTitle=$(echo "$bookdata" | pup "tr:nth-of-type($trr) td:nth-of-type(1) text{}" | grep -v "^\s*$" | trim | head -2 | xargs)
+			bookTitle=$(echo "$bookdata" | pup "tr:nth-of-type($trr) td:nth-of-type(1) text{}" | grep -v "^\s*$" | awk '{$1=$1};1' | head -2 | xargs)
 		fi
 
 		if [ -z "$bookTitle" ]; then
@@ -78,14 +78,14 @@ download() {
 
 	# exclude mirror
 	if [ "$mode" = "rofi" ]; then
-		line=$(cat /tmp/libgen.txt | sed 's/;0;//g' | sed 's/;1;/: /' | sed 's/;2;/ - /' | sed 's/;3;/ (/' | sed 's/;4;/, /' | sed 's/;5;/, /' | sed 's/;6;/) [/' | sed 's/;7;.*/]/' | sed 's/[0-9][0-9][0-9][0-9][0-9][0-9]\+ \?,\?\;\?//g' | trim | recode -q html..ascii | rofi -i -hover-select -me-select-entry '' -me-accept-entry MousePrimary -dmenu -p "Select book: " -hover-select -theme-str '* { font: "monospace 12"; width: 80%; }' -l 26 | cut -d':' -f1 | sed 's/;1;.*//g' | sed 's/;0;//g')
+		line=$(cat /tmp/libgen.txt | sed 's/;0;//g' | sed 's/;1;/: /' | sed 's/;2;/ - /' | sed 's/;3;/ (/' | sed 's/;4;/, /' | sed 's/;5;/, /' | sed 's/;6;/) [/' | sed 's/;7;.*/]/' | sed 's/[0-9][0-9][0-9][0-9][0-9][0-9]\+ \?,\?\;\?//g' | awk '{$1=$1};1' | recode -q html..ascii | rofi -i -hover-select -me-select-entry '' -me-accept-entry MousePrimary -dmenu -p "Select book: " -hover-select -theme-str '* { font: "monospace 12"; width: 80%; }' -l 26 | cut -d':' -f1 | sed 's/;1;.*//g' | sed 's/;0;//g')
 	else
-		line=$(cat /tmp/libgen.txt | sed 's/;0;//g' | sed 's/;1;/: /' | sed 's/;2;/ - /' | sed 's/;3;/ (/' | sed 's/;4;/, /' | sed 's/;5;/, /' | sed 's/;6;/) [/' | sed 's/;7;.*/]/' | sed 's/[0-9][0-9][0-9][0-9][0-9][0-9]\+ \?,\?\;\?//g' | trim | recode -q html..ascii | fzf | cut -d':' -f1 | sed 's/;1;.*//g' | sed 's/;0;//g')
+		line=$(cat /tmp/libgen.txt | sed 's/;0;//g' | sed 's/;1;/: /' | sed 's/;2;/ - /' | sed 's/;3;/ (/' | sed 's/;4;/, /' | sed 's/;5;/, /' | sed 's/;6;/) [/' | sed 's/;7;.*/]/' | sed 's/[0-9][0-9][0-9][0-9][0-9][0-9]\+ \?,\?\;\?//g' | awk '{$1=$1};1' | recode -q html..ascii | fzf | cut -d':' -f1 | sed 's/;1;.*//g' | sed 's/;0;//g')
 	fi
 
 	[ -z "$line" ] && return 1
 
-	title=$(cat /tmp/libgen.txt | sed -n "$line"p | sed 's/.*;1;//' | sed 's/;2;.*//g' | sed 's/[0-9][0-9][0-9][0-9][0-9][0-9]\+ \?,\?\;\?//g' | trim | sed 's/ 1$//g;s/ X$//g;s/ b$//g' | recode -q html..ascii)
+	title=$(cat /tmp/libgen.txt | sed -n "$line"p | sed 's/.*;1;//' | sed 's/;2;.*//g' | sed 's/[0-9][0-9][0-9][0-9][0-9][0-9]\+ \?,\?\;\?//g' | awk '{$1=$1};1' | sed 's/ 1$//g;s/ X$//g;s/ b$//g' | recode -q html..ascii)
 	author=$(cat /tmp/libgen.txt | sed -n "$line"p | sed 's/.*;2;//' | sed 's/;3;.*//g')
 	publisher=$(cat /tmp/libgen.txt | sed -n "$line"p | sed 's/.*;3;//' | sed 's/;4;.*//g')
 	year=$(cat /tmp/libgen.txt | sed -n "$line"p | sed 's/.*;4;//' | sed 's/;5;.*//g')
