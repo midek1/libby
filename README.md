@@ -59,7 +59,7 @@ Usage: libby [--rofi] [--mirror <num>] [--no-view] [--to-kindle] <query>
 ## Things to consider
 
 - `libby` filters out all filetypes except ePUBs and PDFs.
-- By default, `libby` assumes `$HOME/books` (lowercase 'b') exists and saves all downloads there. This can be changed by adding
+- By default, `libby` creates `$HOME/books` (lowercase 'b') if it does not already exist and saves all downloads there. This can be changed by adding
 ```zsh
 export LIBBY_OUTPUT_DIR="/foo/bar"
 ```
