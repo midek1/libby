@@ -29,6 +29,7 @@ When `libby` is installed from the AUR, there is no need to install these manual
 
 - [`pup`](https://github.com/ericchiang/pup) (`yay -S pup`)
 - [`fzf`](https://github.com/junegunn/fzf) (`sudo pacman -S fzf`)
+- `recode` (`sudo pacman -S recode`)
 - curl
 - wget
 
