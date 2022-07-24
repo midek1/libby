@@ -61,6 +61,8 @@ Usage: libby [--rofi] [--mirror <num>] [--no-view] [--to-kindle] <query>
 ```zsh
 export LIBBY_OUTPUT_DIR="/foo/bar"
 ```
+to your shell profile (`.zprofile` or `.bash_profile`).
+
 - By default, `libby` opens the downloaded file with `xdg-open`. This command can be changed by adding
 ```zsh
 export LIBBY_VIEWER="foobar"
