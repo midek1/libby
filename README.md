@@ -36,7 +36,7 @@ When `libby` is installed from the AUR, there is no need to install these manual
 
 If you want the functionality these provide in `libby`, you have to install them yourself.
 
-- mut/neomutt (optional)
+- mutt/neomutt (optional)
 - rofi (optional)
 - calibre (optional)
 
