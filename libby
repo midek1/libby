@@ -24,6 +24,7 @@ fi
 
 [ -z "$LIBBY_OUTPUT_DIR" ] && LIBBY_OUTPUT_DIR="$HOME/books"
 mkdir -p "$LIBBY_OUTPUT_DIR"
+[ -z "$LIBBY_VIEWER" ] && LIBBY_VIEWER="xdg-open"
 [ -z "$mode" ] && mode="fzf"
 [ -z "$mirrornum" ] && mirrornum=3
 [ -z "$view" ] && view=1
@@ -122,7 +123,7 @@ download() {
 	fi
 
 	if [ $view = 1 ]; then
-		xdg-open "$LIBBY_OUTPUT_DIR/$title.$filetype"
+		$LIBBY_VIEWER "$LIBBY_OUTPUT_DIR/$title.$filetype"
 	fi
 }
 
