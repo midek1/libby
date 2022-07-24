@@ -2,6 +2,7 @@
 
 while true; do
 	case $1 in
+		--help|-h)   showhelp=1; shift ;;
 		--rofi)      mode="rofi"; shift ;;
 		--mirror)    shift; mirrornum="$1"; shift ;;
 		--no-view)   view=0; shift ;;
@@ -11,7 +12,7 @@ while true; do
 	esac
 done
 
-if [ -z "$query" ]; then
+if [ -z "$query" ] || [ $showhelp = 1 ]; then
 	echo "Usage: libby [--rofi] [--mirror <num>] [--no-view] [--to-kindle] <query>"
 	echo "  --rofi: use rofi to select a book (default is fzf)"
 	echo "  --mirror <num>: use an alternative libgen mirror (default: 3)"
