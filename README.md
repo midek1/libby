@@ -38,7 +38,7 @@ If you want the functionality these provide in `libby`, you have to install them
 
 - mut/neomutt (optional)
 - rofi (optional)
-- ebook-convert (optional)
+- calibre (optional)
 
 ## Usage
 
