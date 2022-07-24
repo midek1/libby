@@ -23,10 +23,19 @@ sudo cp libby/libby /usr/bin/
 
 ## Requirements
 
+### Necessary
+
+When `libby` is installed from the AUR, there is no need to install these manually.
+
 - [`pup`](https://github.com/ericchiang/pup) (`yay -S pup`)
 - [`fzf`](https://github.com/junegunn/fzf) (`sudo pacman -S fzf`)
 - curl
 - wget
+
+### Optional
+
+If you want the functionality these provide in `libby`, you have to install them yourself.
+
 - mut/neomutt (optional)
 - rofi (optional)
 - ebook-convert (optional)
