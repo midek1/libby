@@ -2,7 +2,9 @@
 
 `libby` is a simple CLI tool to quickly download books from [Library Genesis](https://libgen.is/).
 
-https://user-images.githubusercontent.com/11081492/180625509-92b5587c-b845-45d8-a169-2c2fc0d57d1a.mp4
+## Demo
+
+![output](https://user-images.githubusercontent.com/11081492/180638963-17bc20ca-e25e-47cc-8839-dd826be2eeef.gif)
 
 ## Installation
 
