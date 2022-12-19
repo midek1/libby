@@ -25,7 +25,7 @@ WHITE=$'\e[0;37m'
 OFF=$'\e[0m'
 
 if [ $showhelp ]; then
-	echo "Usage: libby [--rofi] [--mirror <num>] [--view] [--to-kindle] <query>"
+	echo "Usage: libby [--res <num>] [--mirror <num>] [--view] [--to-kindle] <query>"
 	echo "  --res <25/50/75>: request fewer results for faster loading (default:100)"
 	echo "  --mirror <num>: use an alternative libgen mirror (default: 3)"
 	echo "  --view: view the result"
@@ -38,7 +38,6 @@ fi
 [ -z "$LIBBY_OUTPUT_DIR" ] && LIBBY_OUTPUT_DIR="$HOME/books"
 mkdir -p "$LIBBY_OUTPUT_DIR"
 [ -z "$LIBBY_VIEWER" ] && LIBBY_VIEWER="xdg-open"
-[ -z "$mode" ] && mode="fzf"
 [ -z "$res" ] && res=100
 [ -z "$mirrornum" ] && mirrornum=3
 [ -z "$view" ] && view=0
