@@ -101,13 +101,11 @@ download() {
 		filetype=$(cat /tmp/libgen.txt | sed -n "$line"p | sed 's/.*;6;//' | sed 's/;7;.*//g')
 		mirror=$(cat /tmp/libgen.txt | sed -n "$line"p | sed 's/.*;7;//' | sed 's/;8;.*//g')
 
-		echo "$mirror LINE 102"
-
 		[ -z "$mirror" ] && echo "no mirror found" && return 1
 		echo "fetching mirror..."
 		mirror=$(curl -A "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) QtWebEngine/5.15.5 Chrome/87.0.4280.144 Safari/537.36" -Ls $mirror | pup "table[id=maintable] :parent-of(h2) attr{href}" | head -1| sed "s/amp;//")
 
-		echo "$mirror LINE 108"
+		#echo "$mirror"
 
 		[ -z "$mirror" ] && echo "failed to retrieve mirror" && return 1
 
@@ -120,7 +118,7 @@ download() {
 
 		#parallel wget -nv -c -O - "$mirror" > "/media/test/$title.$filetype"
 
-		wget -c -O - "$mirror" > "$LIBBY_OUTPUT_DIR/$title.$filetype"
+		wget -qc -O - "$mirror" > "$LIBBY_OUTPUT_DIR/$title.$filetype" --show-progress
 	done
 
 	rm /tmp/libgen.txt # clean up
