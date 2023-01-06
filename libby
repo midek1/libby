@@ -116,9 +116,7 @@ download() {
 		echo "downloading $title.$filetype to $LIBBY_OUTPUT_DIR"
 		mirror="https://libgen.rocks/$mirror"
 
-		#parallel wget -nv -c -O - "$mirror" > "/media/test/$title.$filetype"
-
-		wget -qc -O - "$mirror" > "$LIBBY_OUTPUT_DIR/$title.$filetype" --show-progress
+		aria2c "$mirror" -d "$LIBBY_OUTPUT_DIR" -o "$title.$filetype" --console-log-level=warn --download-result=hide
 	done
 
 	rm /tmp/libgen.txt # clean up
